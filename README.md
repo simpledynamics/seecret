@@ -1,4 +1,4 @@
-# SEECRET - A Simple Dynamics project #
+# SEECRET #
 
 Seecret is a javascript utility for plaintext steganography. 
 
@@ -20,6 +20,8 @@ Read more at [http://www.seecret.net] (http://www.seecret.net)
 * [Nate Grover] (https://github.com/nategrover)
 * A Simple Dynamics project
 
+### Contributors ###
+Seecret is a [http://www.simpledynamics.net] (Simple Dynamics) project
 
 ## License
 
