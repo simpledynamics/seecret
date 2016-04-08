@@ -115,6 +115,15 @@ describe("Seecret Core", function() {
 		expect(seecret.isValidEnvelope(envelope)).toBe(true);
 	});
 
+	it("Should default to config.CONTENT_TYPES.PLAIN when making an envelope if no CONTENT_TYPES value is supplied", function() { 
+		seecret = new SEECRET_ENGINE();
+		var val = "test";
+		var hiddenVal = seecret.hidePlainText(val);
+		var envelope = seecret.envelope(hiddenVal);
+		var contentType = seecret.getContentTypeFromEnvelope(envelope);
+		expect(contentType).toEqual(seecret.config.CONTENT_TYPES.PLAIN);
+	});
+
 	it("Should throw an INVALID_SEECRET_CONTENT_TYPE_ERROR when calling envelope with an invalid content type", function() { 
 		seecret = new SEECRET_ENGINE();
         //seecret = new SEECRET({ONE:"1",ZERO:"0",DELIMITER:"-",BOOKEND:"$--$"});

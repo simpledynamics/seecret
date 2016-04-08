@@ -1,3 +1,4 @@
+
 /**
 @author {@link http://www.simpledynamics.net| Nate Grover, Barrett Tucker}
 @license
@@ -131,22 +132,19 @@ seecretInstance.config = seecretInstance.mergeConfigs({RANDOM_COVERTEXTS:true})
 	/**
 	Convert a string or array of numbers into a Seecret string (a string of hidden characters).
 	@param {string|number[]} val - the plaintext string or array of numbers to be converted
-	@param {string} [contentType=config.PLAIN] - one of the CONTENT_TYPES values in the config.  The contentType "NUMBERS_ARRAY" is an array of integers instead of a string.  "PLAIN" contentType is a plain old string of any unicode characters.  If no contentType is provided, the method will assume the contentType is "PLAIN".
+	@param {string} [contentType=config.CONTENT_TYPES.PLAIN] - one of the CONTENT_TYPES values in the config.  The contentType "NUMBERS_ARRAY" is an array of integers instead of a string.  "PLAIN" contentType is a plain old string of any unicode characters.  If no contentType is provided, the method will assume the contentType is "PLAIN".
 	@example 
 //A basic case
 var seecretInstance = new SEECRET_ENGINE();
-var hiddenText = seecretInstance.hide("this is the Seecret")
+var hiddenText = seecretInstance.hide("this is the Seecret");
 
 //hiding an array of integers
-var compressed = [1,2,3,4,5,6,,7,8,9,10];
-var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_TYPES.NUMBERS_ARRAY)
+var compressed = [1,2,3,4,5,6,7,8,9,10];
+var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_TYPES.NUMBERS_ARRAY);
 
 	@returns {string} the Seecret-encoded string 
 	*/
 	this.hide = function(val,contentType){
-		//NUMBERS_ARRAY type is an array of integers (the usual output for compression utilities such as smaz and shoco)
-		//PLAIN means unicode not ascii
-		//default is PLAIN
 		if(contentType){
 			switch(contentType){
 				case this.config.CONTENT_TYPES.PLAIN:return this.hidePlainText(val);break;
@@ -177,7 +175,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		}
 	}
 	/**
-	Convert a plaintext string into a Seecret string
+	Convert a plaintext string into a Seecret string.  Iterates through each character in the string and hides it via {@link SEECRET_ENGINE#hideCharacter}
 	@param {string} val - the plaintext string to be converted
 	@returns {string} the hidden Seecret text
 	*/
@@ -191,7 +189,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	}
 	
 	/**
-	Convert a single character to a string of hidden characters representing the binary value of the unicode character number.  
+	Convert a single character to a string of hidden characters representing the binary value of the unicode character number.  Used by {@link SEECRET_ENGINE#hidePlainText} to iterate through each character in the plaintext string and hide it.
 	@param {string} character - the plaintext character to be converted
 	@returns {string} the hidden character
 	*/
@@ -201,7 +199,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	}
 	
 	/**
-	Convert a string of 0s and 1s representing a binary value into a string of config.ZERO and config.ONE values.
+	Convert a string of 0s and 1s representing a binary value into a string of config.ZERO and config.ONE values.  Used by {@link SEECRET_ENGINE#hideCharacter} and {@link SEECRET_ENGINE#hideNumber}
 	@param {string} binString - the string of 1s and 0s
 	@returns {string} a string of config.ZERO and config.ONE values
 	*/
@@ -213,7 +211,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return output;
 	}
 	/**
-	Convert a encoded hidden Seecret string back into a string of unicode characters.
+	Convert a encoded hidden Seecret string back into a string of unicode characters.  Iterates through each delimited set of binary strings and unhides each one via the {@link SEECRET_ENGINE#unhideCharacter} method.
 	@param {string} val - the Seecret string to be converted back into plaintext
 	@returns {string}
 	*/
@@ -226,7 +224,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return output;
 	}
 	/**
-	Convert a Seecret-encoded binary number into a single unicode character that has that number code.  example:  0101010 (encoded as a Seecret string) would convert to Z
+	Convert a Seecret-encoded binary number into a single unicode character that has that number code.  example:  0101010 (encoded as a Seecret string) would convert to Z.  This method is used by the {#link SEECRET_ENGINE#unhidePlainText} method to iteratoe through each delimited series of config.ZERO and config.ONE values and unhide each one into a string of "0" and "1" values.
 	@param {string} val - the Seecret string of config.ZERO and config.ONE values to to be converted into a single unicode character.
 	@returns {string}
 	*/
@@ -235,7 +233,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return this.getCharacterFromBinaryString(binaryString);
 	}
 	/**
-	Convert a string of config.ZERO and config.ONE values back into a string of 0s and 1s
+	Convert a string of config.ZERO and config.ONE values back into a string of 0s and 1s.  Used by {@link SEECRET_ENGINE#unhideCharacter} && {@link SEECRET_ENGINE#unhideNumber}
 	@param {string} binaryString - the Seecret string of config.ZERO and config.ONE values to to be converted into the string of 0s and 1s
 	@returns {string}
 	*/
@@ -247,7 +245,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return buffer;
 	}
 	/**
-	Convert a string of 0s and 1s (eg. "0101010") into the unicode character that the binary number represents.  This method will return an empty string if the binary value does not convert to a unicode character.
+	Convert a string of 0s and 1s (eg. "0101010") into the unicode character that the binary number represents.  This method will return an empty string if the binary value does not convert to a unicode character.  Used by the {@link SEECRET_ENGINE#unhideNumber} method.
 	@param {string} binaryString - The string of 0s and 1s to convert to a unicode character.  
 	@returns {string}
 	*/
@@ -261,7 +259,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return val;
 	}
 	/**
-	Convert an array of numbers into a string of hidden numbers.  
+	Convert an array of numbers into a string of hidden numbers.  Iterates through each number in the array and hides it by calling the {@link SEECRET_ENGINE#hideNumber} method.
 	@param {number[]} val - the array of numbers to be converted
 	@returns {string} the Seecret string
 	*/
@@ -273,7 +271,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return vals.join(this.config.DELIMITER);
 	}
 	/**
-	Convert a single number value into a string of hidden 0s and 1s that represent the number in binary.  
+	Convert a single number value into a string of hidden 0s and 1s that represent the number in binary.  Used by the {@link SEECRET_ENGINE#hideNumbersArray} method
 	@param {number} numberVal - the number to be converted
 	@returns {string}
 	*/
@@ -282,7 +280,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return this.hideBinaryString(binVal);
 	}
 	/**
-	Convert a string of Seecret-encoded number back into an array of integers
+	Convert a string of Seecret-encoded numbers back into an array of integers.  Creates and array from the delimited set of binary strings and unhides them all via {@link SEECRET_ENGINE#unhideBinaryArray} method.  
 	@param {string} val - The string
 	@returns {number[]}
 	*/
@@ -292,7 +290,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return numbers;
 	}
 	/**
-	Convert an array of Seecret-encoded binarys number back into an array of numbers
+	Convert an array of Seecret-encoded binarys number back into an array of numbers. Iterates through an array of strings composed of config.ZERO and config.ONE values and unhides each one via the {@link SEECRET_ENGINE#unhideNumber} method.  Unhide in this case is to convert it into a number equal to the binary value.
 	@param {array} binaryArray - The array of Seecret-encoded numbers
 	@returns {string[]}
 	*/
@@ -307,7 +305,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return vals;
 	}
 	/**
-	Convert a Seecret-encoded binary number into a string of 1s and 0s.
+	Convert a Seecret-encoded binary number into a string of 1s and 0s.  Used by {@link SEECRET_ENGINE#unhideBinaryArray} to unhide all the binary strings in the array.
 	@param {array} binaryArray - The array of Seecret-encoded numbers
 	@returns {number}
 	*/
@@ -330,7 +328,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return num;
 	}
 	/**
-	Put a Seecret string in the middle of a plaintext covertext.
+	Put a Seecret string in the middle of a plaintext covertext.  Used by {@link SEECRET_ENGINE#chainify} when constructing a list of covertexts for a single Seecret.
 	@param {string} seecretText - A Seecret string
 	@param {string} coverText - The covertext to contembed the Seecret string in.
 	@returns {string}
@@ -379,7 +377,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return seecretText;
 	}
 	/**
-	Extract the cover text from a string.  Returns an empty string if there is no plain text.  
+	Extract the cover text from a string.  Returns an empty string if there is no plain text in the string.  
 	@param {string} val - A string
 	@returns {string}
 	*/
@@ -393,13 +391,20 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return coverText;
 	}
 	/**
-	Create an envelope for Seecret encoded text.  The envelope consists of a start code, a content type, the Seecret text, and an end code.  These are config.ENVELOPE_START (which in turn is generated as two config.DELIMITER values), a contentType (one of the values in config.CONTENT_TYPES), the Seecret encoded text (result of hide() or hidePlainText() or hideBinaryString(), and config.ENVELOPE_END (which in turn is generated as three config.DELIMITER values)
+	Create an envelope for Seecret encoded text.  The envelope consists of a cancatenation of the following:
+		- the config.ENVELOPE_START value which is the same as config.DELIMITER + config.DELIMITER
+		- a valid config.CONTENT_TYPES value 
+		- the Seecret text (result of {@link SEECRET_ENGINE#hide} or {@link SEECRET_ENGINE#hidePlainText} or {@link SEECRET_ENGINE#hideBinaryString}
+		- the config.ENVELOPE_END value which is the same as config.DELIMITER + config.DELIMITER + config.DELIMITER
 	@param {string} seecretText - the Seecret text
-	@param {string} contentType - the CONTENT_TYPE value
+	@param {string} [contentType=config.CONTENT_TYPES.PLAIN] - the CONTENT_TYPE value
 	@returns {string}
-	@throws INVALID_SEECRET_CONTENT_TYPE_ERROR
+	@throws INVALID_SEECRET_CONTENT_TYPE_ERRORk
 	*/
 	this.envelope=function(seecretText,contentType){
+		if(!contentType){
+			contentType = this.config.CONTENT_TYPES.PLAIN;
+		}
 		if(!this.isValidContentType(contentType)){
 			throw INVALID_SEECRET_CONTENT_TYPE_ERROR;
 		}
@@ -632,7 +637,7 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 	});
 
 //dechainify the third Seecret to be found in the array
-var mySeecret = seecretInstance.dechainify(arrayOfSeecrets,{ordinal:2})
+var mySeecret = seecretInstance.dechainify(arrayOfSeecrets,{ordinal:2});
 	@returns {string}
 	*/
 	this.dechainify=function(chain,params){
