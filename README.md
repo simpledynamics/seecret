@@ -5,6 +5,7 @@ Seecret is a javascript utility for plaintext steganography.
 Seecret can convert a plaintext string or array of numbers (the usual output format for text compression algorithms such as shoco and smaz) into an encoded string of hidden characters and embed them in covertexts. The Seecret engine can also reconvert the resulting stegotexts back into plaintexts or number arrays.
 
 ### Version 1.0 ###
+Read more at [http://www.seecret.net] (http://www.seecret.net)
 
 ### How do I get set up? ###
 
@@ -14,13 +15,9 @@ Seecret can convert a plaintext string or array of numbers (the usual output for
 * No configuration necessary
 * No dependencies
 
-### Contribution guidelines ###
-
-* Feel free to branch and send us a pull request
-
 ### Contact ###
 
-* [Nate Grover] https://github.com/nategrover
+* [Nate Grover] (https://github.com/nategrover)
 * A Simple Dynamics project
 
 
