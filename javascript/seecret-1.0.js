@@ -1,6 +1,5 @@
 
 /**
-@author {@link http://www.simpledynamics.net| Nate Grover, Barrett Tucker}
 @license
 Copyright (c) 2016 Simple Dynamics, Inc.
 
@@ -21,7 +20,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+*/
 
+/**
+@author {@link http://www.simpledynamics.net| Nate Grover, Barrett Tucker}
 @class
 @classdesc 
 ### This is the core engine for Seecret steganography.  
@@ -619,7 +621,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	Returns a dechainified Seecret reconstituted from chain segments found within the array.  If the covertexts exist in the array, IN ORDER, the Seecret will be returned.  Otherwise returns an empty string.  
 	@param {array} chain - an array
 	@param {params} [params] - The params for dechainifying the Seecret from the array.
-	@param {params.ordinal} [params.ordinal=0] - The ordinal number of the Seecret to look for if the array may contain more than one Seecret.  Seecrets are assumed to be chained in order, and start and end without overlapping each other.  The oridnal value is 0 based so a value of 1 means it will return the SECOND Seecret.
+	@param {params.ordinal} [params.ordinal=0] - The ordinal number of the Seecret to look for if the array may contain more than one Seecret.  Seecrets are assumed to be chained in order, and start and end without overlapping each other.  The oridinal value is 0 based so a value of 1 means it will return the SECOND Seecret.
 	@param {function} [params.chainSegmentMatcher] - A function to override the default chainSegmentMatcher. 
 	@param {function} [params.chainSegmentContentFinder] - A function to override the default chainSegmentContentFinder. 
 	@example  //simple case of dechainifying a seecret from an array of strings  
@@ -637,7 +639,16 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 	});
 
 //dechainify the third Seecret to be found in the array
-var mySeecret = seecretInstance.dechainify(arrayOfSeecrets,{ordinal:2});
+var mySeecret = seecretInstance.dechainify(arrayofObjects,{
+		chainSegmentMatcher:function(segment){
+			return segment && typeof segment == "object" && segment.seecret;
+		},
+		chainSegmentContentFinder:function(segment){
+			//assumes we have already validated the segment with chainSegmentMatcher
+			return segment.seecret;
+		},
+		ordinal:2
+	});
 	@returns {string}
 	*/
 	this.dechainify=function(chain,params){
@@ -670,6 +681,70 @@ var mySeecret = seecretInstance.dechainify(arrayOfSeecrets,{ordinal:2});
 			}
 		}
 		return endFound?dechainedSeecret:"";
+	}
+	
+/**
+	Retrieve an array of covertexts from a chainified Seecret.
+	@param {array} chain - an array
+	@param {params} [params] - The params for dechainifying the Seecret from the array.
+	@param {params.ordinal} [params.ordinal=0] - The ordinal number of the Seecret to look for if the array may contain more than one Seecret.  Seecrets are assumed to be chained in order, and start and end without overlapping each other.  The oridinal value is 0 based so a value of 1 means it will return the SECOND Seecret.
+	@param {function} [params.chainSegmentMatcher] - A function to override the default chainSegmentMatcher. 
+	@param {function} [params.chainSegmentContentFinder] - A function to override the default chainSegmentContentFinder. 
+	@example  //simple case of dechainifying a chainified seecret and returning an object with the seecret message and the list of covertexts
+var mySeecret = seecretInstance.dechainify(arrayOfStrings)
+	
+//dechainifying from an array of objects where .seecret is the property on each object that holds the stegotext
+var mySeecret = seecretInstance.dechainify(arrayofObjects,{
+		chainSegmentMatcher:function(segment){
+			return segment && typeof segment == "object" && segment.seecret;
+		},
+		chainSegmentContentFinder:function(segment){
+			//assumes we have already validated the segment with chainSegmentMatcher
+			return segment.seecret;
+		},
+		ordinal:1
+	});
+
+	@returns {object}  {seecret:"someseecret",covertexts:string[]}
+*/	
+	this.dechainifyWithCovertexts=function(chain,params){
+		var result = {seecret:"",covertexts:[]};
+		var ordinal = params && params.ordinal?params.ordinal:0;
+		var chainSegmentMatcher = params && params.chainSegmentMatcher?params.chainSegmentMatcher:this.chainSegmentMatcher;
+		var chainSegmentContentFinder = params && params.chainSegmentContentFinder?params.chainSegmentContentFinder:this.chainSegmentContentFinder;
+		var index =0;
+		var startFound = false;
+		var endFound = false;
+		var dechainedSeecret = "";
+		var covertexts = [];
+		for(var i=0;i<chain.length;i++){
+			if(chainSegmentMatcher(chain[i])){
+				var content = chainSegmentContentFinder(chain[i]);
+				if(!this.hasSeecretContent(content)){
+					continue;
+				}
+				var seecretContent = this.extractSeecretText(content);
+				if(!startFound && this.isEnvelopeStart(seecretContent) && ordinal==index++){
+					index = i;
+					startFound=true;
+					dechainedSeecret = seecretContent;
+					covertexts.push(this.extractCovertext(content));
+				}
+				else if(startFound){
+					dechainedSeecret += seecretContent;
+					covertexts.push(this.extractCovertext(content));
+					if(!endFound && this.isEnvelopeEnd(seecretContent)){
+						endFound=true;
+						break;
+					} 
+				}
+			}
+		}
+		if(endFound) {
+			result.seecret=dechainedSeecret;
+			result.covertexts = covertexts;
+		}
+		return result;
 	}
 	
 	//generic utilities unrelated to Seecret features but we want to have them here so Seecret can stand alone without any dependencies

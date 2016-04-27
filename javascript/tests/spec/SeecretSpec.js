@@ -552,6 +552,22 @@ describe("Seecret Core", function() {
 		expect(result[1]).toEqual(expectedIndex2);
 		expect(result[2]).toEqual(expectedIndex3);
 	});
+	
+	it("should dechainify and return the Seecret and the array covertexts strings that held the Seecret",function() {
+        seecret = new SEECRET_ENGINE({ONE:"1",ZERO:"0",DELIMITER:"-",MAX_CHAIN_SEGMENT_LENGTH:40});
+		var val = "chain test";
+		var hiddenVal = seecret.hidePlainText(val);
+		var envelope = seecret.envelope(hiddenVal,seecret.config.CONTENT_TYPES.PLAIN);
+		var covertexts = ["aa","bb","cc","dd","ee"];
+		var chain = seecret.chainify(envelope,covertexts);
+		var dechained = seecret.dechainifyWithCovertexts(chain);
+		expect(dechained.seecret).toBeDefined();
+		expect(dechained.seecret.length).toBeGreaterThan(0);
+		var unhiddenSeecret = seecret.unhide(seecret.getSeecretFromEnvelope(dechained.seecret));
+		expect(unhiddenSeecret).toEqual(val);
+		expect(dechained.covertexts).toEqual(covertexts.slice(0,chain.length));
+		
+	});
 
 	it("Should shuffle an array", function() { 
 		seecret = new SEECRET_ENGINE();
