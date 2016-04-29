@@ -617,6 +617,10 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 				}
 				var seecretContent = this.extractSeecretText(content);
 				if(!startFound && this.isEnvelopeStart(seecretContent)){
+					if(this.isEnvelopeEnd(seecretContent)){
+						ordinals.push(startIndex);
+						continue;
+					}
 					startFound=true;
 					startIndex = i;
 				}
