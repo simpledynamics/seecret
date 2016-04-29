@@ -1,5 +1,16 @@
-
 /**
+ .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. 
+| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
+| |    _______   | || |  _________   | || |  _________   | || |     ______   | || |  _______     | || |  _________   | || |  _________   | |
+| |   /  ___  |  | || | |_   ___  |  | || | |_   ___  |  | || |   .' ___  |  | || | |_   __ \    | || | |_   ___  |  | || | |  _   _  |  | |
+| |  |  (__ \_|  | || |   | |_  \_|  | || |   | |_  \_|  | || |  / .'   \_|  | || |   | |__) |   | || |   | |_  \_|  | || | |_/ | | \_|  | |
+| |   '.___`-.   | || |   |  _|  _   | || |   |  _|  _   | || |  | |         | || |   |  __ /    | || |   |  _|  _   | || |     | |      | |
+| |  |`\____) |  | || |  _| |___/ |  | || |  _| |___/ |  | || |  \ `.___.'\  | || |  _| |  \ \_  | || |  _| |___/ |  | || |    _| |_     | |
+| |  |_______.'  | || | |_________|  | || | |_________|  | || |   `._____.'  | || | |____| |___| | || | |_________|  | || |   |_____|    | |
+| |              | || |              | || |              | || |              | || |              | || |              | || |              | |
+| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
+ '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
+
 @license
 Copyright (c) 2016 Simple Dynamics, Inc.
 
@@ -670,6 +681,9 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 					index = i;
 					startFound=true;
 					dechainedSeecret = seecretContent;
+					if(this.isEnvelopeEnd(seecretContent)){
+						return dechainedSeecret;
+					}
 				}
 				else if(startFound){
 					dechainedSeecret += seecretContent;
@@ -729,6 +743,11 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 					startFound=true;
 					dechainedSeecret = seecretContent;
 					covertexts.push(this.extractCovertext(content));
+					if(this.isEnvelopeEnd(seecretContent)){
+						result.seecret=dechainedSeecret;
+						result.covertexts = covertexts;
+						return result;
+					}
 				}
 				else if(startFound){
 					dechainedSeecret += seecretContent;

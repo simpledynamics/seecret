@@ -554,7 +554,8 @@ describe("Seecret Core", function() {
 	});
 	
 	it("should dechainify and return the Seecret and the array covertexts strings that held the Seecret",function() {
-        seecret = new SEECRET_ENGINE({ONE:"1",ZERO:"0",DELIMITER:"-",MAX_CHAIN_SEGMENT_LENGTH:40});
+        //seecret = new SEECRET_ENGINE({ONE:"1",ZERO:"0",DELIMITER:"-",MAX_CHAIN_SEGMENT_LENGTH:40});
+		seecret = new SEECRET_ENGINE({MAX_CHAIN_SEGMENT_LENGTH:40});
 		var val = "chain test";
 		var hiddenVal = seecret.hidePlainText(val);
 		var envelope = seecret.envelope(hiddenVal,seecret.config.CONTENT_TYPES.PLAIN);
@@ -568,7 +569,36 @@ describe("Seecret Core", function() {
 		expect(dechained.covertexts).toEqual(covertexts.slice(0,chain.length));
 		
 	});
+	
+	it("should dechainify and return the Seecret when the chain segment contains the entire Seecret",function() {
+        //seecret = new SEECRET_ENGINE({ONE:"1",ZERO:"0",DELIMITER:"-",MAX_CHAIN_SEGMENT_LENGTH:4000});
+		seecret = new SEECRET_ENGINE({MAX_CHAIN_SEGMENT_LENGTH:400});
+		var val = "chain test";
+		var hiddenVal = seecret.hidePlainText(val);
+		var envelope = seecret.envelope(hiddenVal,seecret.config.CONTENT_TYPES.PLAIN);
+		var covertexts = ["aa","bb","cc","dd","ee"];
+		var chain = seecret.chainify(envelope,covertexts);
+		console.log("chain[0] = " + chain[0]);
+		expect(chain.length).toEqual(1);
+		var extractedEnvelope = seecret.extractSeecretText(chain[0]);
+		expect(seecret.isEnvelopeStart(extractedEnvelope)).toBe(true);
+		expect(seecret.isEnvelopeEnd(extractedEnvelope)).toBe(true);
+		
+		var dechainedText = seecret.dechainify(chain);
+		expect(dechainedText).toEqual(extractedEnvelope);
+		
+		var dechained = seecret.dechainifyWithCovertexts(chain);
+		expect(dechained.seecret).toBeDefined();
+		expect(dechained.seecret.length).toBeGreaterThan(0);
+		console.log("about to get the seecret text from the envelope");
+		
+		var unhiddenSeecret = seecret.unhide(seecret.getSeecretFromEnvelope(dechained.seecret));
+		expect(unhiddenSeecret).toEqual(val);
+		expect(dechained.covertexts).toEqual(covertexts.slice(0,chain.length));
+		
+	});
 
+	
 	it("Should shuffle an array", function() { 
 		seecret = new SEECRET_ENGINE();
 		var val = [1,2,3,4,5,6,7,8,9,10]
