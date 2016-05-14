@@ -15,6 +15,9 @@ Read more at [http://www.seecret.net] (http://www.seecret.net)
 ### Contributors ###
 Seecret is a [Simple Dynamics] (http://www.simpledynamics.net) project
 
+## Documentation
+https://www.seecret.net/docs
+
 ## License
 
 seecret.js is freely distributable under the terms of the [MIT license](https://github.com/simpledynamics/seecret/blob/master/LICENSE).
