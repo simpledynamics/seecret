@@ -774,9 +774,9 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 	
 	/**
 	@description For use when the config.RANDOM_COVERTEXTS value is set to true.  Shuffles the covertexts that were passed into the {@link SEECRET_ENGINE#hide} method.
-Using Durstendfeld shuffle algorithm, based on Fisher-Yates shuffle 
-Note: This modifies the array that is passed in, so the code should pass in a .slice(0) version of the original array if the original order needs to be preserved for other uses.
-@see {@link https://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm} for a discussion of this algorithm
+	Using Durstendfeld shuffle algorithm, based on Fisher-Yates shuffle 
+	Note: This modifies the array that is passed in, so the code should pass in a .slice(0) version of the original array if the original order needs to be preserved for other uses.
+	@see {@link https://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm} for a discussion of this algorithm
 	@param {array} array - The array to be shuffled
 	returns {array}
 	*/
@@ -790,29 +790,37 @@ Note: This modifies the array that is passed in, so the code should pass in a .s
 		return array;
 	}
 
+	var SEECRET_ERROR = function(name, message) {
+		this.message = message;
+		this.name = name;
+		/**
+		* @override
+		*/
+		this.toString = function(){return this.name + " : " + this.message;};
+	}
 	/**
 	Exception thrown when the Seecret envelope is not valid.
 	*/
-	var INVALID_SEECRET_ENVELOPE_ERROR = {name:"INVALID_SEECRET_ENVELOPE_ERROR",message:"This Seecret envelope is not valid.  Must start with the config.ENVELOPE_START value and second character must be a config.CONTENT_TYPES value",toString:function(){return this.name + " : " + this.message;} }
+	var INVALID_SEECRET_ENVELOPE_ERROR = new SEECRET_ERROR("INVALID_SEECRET_ENVELOPE_ERROR","This Seecret envelope is not valid.  Must start with the config.ENVELOPE_START value and second character must be a config.CONTENT_TYPES value");
 	/**
 	Exception thrown when the contentType value is not one of the config.CONTENT_TYPES values
 	*/
-	var INVALID_SEECRET_CONTENT_TYPE_ERROR = {name:"INVALID_SEECRET_CONTENT_TYPE_ERROR",message:"This Seecret content is not valid.  Must be " + JSON.stringify(this.config.CONTENT_TYPES),toString:function(){return this.name + " : " + this.message;}};
+	var INVALID_SEECRET_CONTENT_TYPE_ERROR = new SEECRET_ERROR("INVALID_SEECRET_CONTENT_TYPE_ERROR","This Seecret content is not valid.  Must be " + JSON.stringify(this.config.CONTENT_TYPES) );
 	/**
 	Exception thrown if the covertext is null or too short - less than 2 characters.
 	*/
-	var INVALID_COVERTEXT_LENGTH_ERROR = {name:"INVALID_COVERTEXT_LENGTH_ERROR",message:"This covertext is not valid.  It must be no more than " + this.config.MAX_COVERTEXT_LENGTH + " characters",toString:function(){return this.name + " : " + this.message;}};
+	var INVALID_COVERTEXT_LENGTH_ERROR = new SEECRET_ERROR("INVALID_COVERTEXT_LENGTH_ERROR","This covertext is not valid.  It must be no more than " + this.config.MAX_COVERTEXT_LENGTH + " characters");
 	/**
 	Exception thrown if trying to {@link SEECRET_ENGINE#chainify} without any covertexts
 	*/
-	var COVERTEXTS_REQUIRED_ERROR = {name:"COVERTEXTS_REQUIRED_ERROR",message:"In order to chainify a Seecret you must provide the covertext values.",toString:function(){return this.name + " : " + this.message;}};
+	var COVERTEXTS_REQUIRED_ERROR = new SEECRET_ERROR("COVERTEXTS_REQUIRED_ERROR","In order to chainify a Seecret you must provide the covertext values.");
 	/**
 	Exception thrown if trying to chainify but not enough covertexts are provided to chainify the whole Seecret
 	*/
-	var NOT_ENOUGH_COVERTEXTS_ERROR = {name:"NOT_ENOUGH_COVERTEXTS_ERROR",message:"In order to chainify a Seecret you must provide enough covertext values.",toString:function(){return this.name + " : " + this.message;}};
+	var NOT_ENOUGH_COVERTEXTS_ERROR = new SEECRET_ERROR("NOT_ENOUGH_COVERTEXTS_ERROR","In order to chainify a Seecret you must provide enough covertext values.");
 	/**
 	Exception thrown if the first covertext for the first segment of the chain can't contain a complete ENVELOPE_START code without exceeding the MAX_CHAIN_SEGMENT_LENGTH value
 	*/
-	var CHAIN_SEGMENT_SIZING_ERROR = {name:"CHAIN_SEGMENT_SIZING_ERROR",message:"The first chain segment of the chain must be able to contain the full text of the config.ENVELOPE_START value",toString:function(){return this.name + " : " + this.message;}}
+	var CHAIN_SEGMENT_SIZING_ERROR = new SEECRET_ERROR("CHAIN_SEGMENT_SIZING_ERROR","The first chain segment of the chain must be able to contain the full text of the config.ENVELOPE_START value");
 }
 
