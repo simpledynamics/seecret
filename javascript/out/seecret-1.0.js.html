@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: seecret-1.0.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: seecret-1.0.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. 
 | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
 | |    _______   | || |  _________   | || |  _________   | || |     ______   | || |  _______     | || |  _________   | || |  _________   | |
@@ -113,7 +141,7 @@ seecretInstance.config = seecretInstance.mergeConfigs({RANDOM_COVERTEXTS:true})
 	this.mergeConfigs = function(one,two) {
 		for(var x in one){
 			if(typeof two[x] != "undefined"){
-				if(typeof one[x] == "object" && typeof two[x] == "object"){
+				if(typeof one[x] == "object" &amp;&amp; typeof two[x] == "object"){
 					for(var y in one[x]){
 						if(typeof two[x][y] != "undefined"){
 							one[x][y] = two[x][y];
@@ -194,7 +222,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	*/
 	this.hidePlainText = function(text){
 		var vals = Array();
-		for (i=0;i<text.length;i++) {
+		for (i=0;i&lt;text.length;i++) {
 			vals.push(this.hideCharacter(text[i]));
 		}
 		var returnVal =  vals.join(this.config.DELIMITER);
@@ -218,7 +246,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	*/
 	this.hideBinaryString = function(binString){
 		var output = "";
-		for(j = 0; j < binString.length; j++) {
+		for(j = 0; j &lt; binString.length; j++) {
 			output += binString[j] == 0?this.config.ZERO:this.config.ONE;
 		}
 		return output;
@@ -231,7 +259,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	this.unhidePlainText = function(val){
 		var vals = val.split(this.config.DELIMITER);
 		var output="";
-		for(var i=0;i<vals.length;i++){
+		for(var i=0;i&lt;vals.length;i++){
 			output += this.unhideCharacter(vals[i]);
 		}
 		return output;
@@ -246,13 +274,13 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		return this.getCharacterFromBinaryString(binaryString);
 	}
 	/**
-	Convert a string of config.ZERO and config.ONE values back into a string of 0s and 1s.  Used by {@link SEECRET_ENGINE#unhideCharacter} && {@link SEECRET_ENGINE#unhideNumber}
+	Convert a string of config.ZERO and config.ONE values back into a string of 0s and 1s.  Used by {@link SEECRET_ENGINE#unhideCharacter} &amp;&amp; {@link SEECRET_ENGINE#unhideNumber}
 	@param {string} binaryString - the Seecret string of config.ZERO and config.ONE values to to be converted into the string of 0s and 1s
 	@returns {string}
 	*/
 	this.unhideBinaryString = function(binaryString){
 		var buffer = "";
-		for(var i=0;i<binaryString.length;i++){
+		for(var i=0;i&lt;binaryString.length;i++){
 			buffer += binaryString[i] == this.config.ZERO?0:1;
 		}
 		return buffer;
@@ -278,7 +306,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	*/
 	this.hideNumbersArray = function(numbersArray){
 		var vals = Array();
-		for (i=0;i<numbersArray.length;i++) {
+		for (i=0;i&lt;numbersArray.length;i++) {
 			vals.push(this.hideNumber(numbersArray[i]));
 		}
 		return vals.join(this.config.DELIMITER);
@@ -309,7 +337,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	*/
 	this.unhideBinaryArray = function(binaryArray){
 		var vals = Array();
-		for(var i=0;i<binaryArray.length;i++){
+		for(var i=0;i&lt;binaryArray.length;i++){
 			var numberVal = this.unhideNumber(binaryArray[i]);
 			if(!isNaN(numberVal) ) {
 				vals.push(numberVal);
@@ -347,7 +375,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	@returns {string}
 	*/
 	this.stegotext = function(seecretText,coverText){
-		if(coverText==null || coverText.length < 2){
+		if(coverText==null || coverText.length &lt; 2){
 			throw INVALID_COVERTEXT_LENGTH_ERROR;
 		}
 		var startText = coverText.substr(0,coverText.length/2)
@@ -360,7 +388,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	@returns {boolean}
 	*/
 	this.hasSeecretContent = function(val){
-		for(var i=0;i<val.length;i++){
+		for(var i=0;i&lt;val.length;i++){
 			if(this.isSeecretCharacter(val[i])) {
 				return true;
 			}
@@ -382,7 +410,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	*/
 	this.extractSeecretText = function(val){
 		var seecretText="";
-		for(var i=0;i<val.length;i++){
+		for(var i=0;i&lt;val.length;i++){
 			if(this.isSeecretCharacter(val[i])) {
 				seecretText += val[i];
 			}
@@ -396,7 +424,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	*/
 	this.extractCovertext = function(val){
 		var coverText="";
-		for(var i=0;i<val.length;i++){
+		for(var i=0;i&lt;val.length;i++){
 			if(!this.isSeecretCharacter(val[i])) {
 				coverText += val[i];
 			}
@@ -441,7 +469,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		}
 		var strippedMessage = this.stripEnvelopeBookends(seecretMessage);
 		var splits = strippedMessage.split(this.config.DELIMITER);
-		if(splits.length < 2){
+		if(splits.length &lt; 2){
 			return false;
 		}
 		var contentType = this.unhideCharacter(splits[0]);
@@ -517,7 +545,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 			throw COVERTEXTS_REQUIRED_ERROR;
 		}
 		for(var s in covertexts){
-			if(covertexts[s].length < 2 || (this.config.MAX_COVERTEXT_LENGTH && covertexts[s].length > this.config.MAX_COVERTEXT_LENGTH)  ){
+			if(covertexts[s].length &lt; 2 || (this.config.MAX_COVERTEXT_LENGTH &amp;&amp; covertexts[s].length > this.config.MAX_COVERTEXT_LENGTH)  ){
 				throw INVALID_COVERTEXT_LENGTH_ERROR;
 			}
 		}
@@ -528,7 +556,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 		var chain = Array();
 		var segmentStart=0;
 		var segmentCount=0;
-		while(segmentStart < envelope.length){
+		while(segmentStart &lt; envelope.length){
 			if(chain.length == covertexts.length){
 				throw NOT_ENOUGH_COVERTEXTS_ERROR;
 			}
@@ -536,7 +564,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 			var currentSegmentLength = this.config.MAX_CHAIN_SEGMENT_LENGTH-covertext.length;
 			var segment = envelope.substr(segmentStart,currentSegmentLength);
 			//if the first segment did not fully contain the ENVELOPE_START value, throw an error
-			if(segmentCount == 1 && !this.isEnvelopeStart(this.extractSeecretText(segment))){
+			if(segmentCount == 1 &amp;&amp; !this.isEnvelopeStart(this.extractSeecretText(segment))){
 				throw CHAIN_SEGMENT_SIZING_ERROR;
 			}
 			chain.push(this.stegotext(segment,covertext));
@@ -581,16 +609,16 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	this.getOrdinalIndex = function(chain,params){
 		var index=0;
 		var startFound=false;
-		var chainSegmentMatcher = params && params.chainSegmentMatcher?params.chainSegmentMatcher:this.chainSegmentMatcher;
-		var chainSegmentContentFinder = params && params.chainSegmentContentFinder?params.chainSegmentContentFinder:this.chainSegmentContentFinder;
-		for(var i=0;i<chain.length;i++){
+		var chainSegmentMatcher = params &amp;&amp; params.chainSegmentMatcher?params.chainSegmentMatcher:this.chainSegmentMatcher;
+		var chainSegmentContentFinder = params &amp;&amp; params.chainSegmentContentFinder?params.chainSegmentContentFinder:this.chainSegmentContentFinder;
+		for(var i=0;i&lt;chain.length;i++){
 			if(chainSegmentMatcher(chain[i])){
 				var content = chainSegmentContentFinder(chain[i]);
 				if(!this.hasSeecretContent(content)){
 					continue;
 				}
 				var seecretContent = this.extractSeecretText(content);
-				if(!startFound && this.isEnvelopeStart(seecretContent) && params.ordinal==index++){
+				if(!startFound &amp;&amp; this.isEnvelopeStart(seecretContent) &amp;&amp; params.ordinal==index++){
 					return i;break;
 				}
 			}
@@ -606,17 +634,17 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	this.getOrdinalIndexes = function(chain,params){
 		var ordinals = [];
 		var startFound=false;
-		var chainSegmentMatcher = params && params.chainSegmentMatcher?params.chainSegmentMatcher:this.chainSegmentMatcher;
-		var chainSegmentContentFinder = params && params.chainSegmentContentFinder?params.chainSegmentContentFinder:this.chainSegmentContentFinder;
+		var chainSegmentMatcher = params &amp;&amp; params.chainSegmentMatcher?params.chainSegmentMatcher:this.chainSegmentMatcher;
+		var chainSegmentContentFinder = params &amp;&amp; params.chainSegmentContentFinder?params.chainSegmentContentFinder:this.chainSegmentContentFinder;
 		var startIndex = 0;
-		for(var i=0;i<chain.length;i++){
+		for(var i=0;i&lt;chain.length;i++){
 			if(chainSegmentMatcher(chain[i])){
 				var content = chainSegmentContentFinder(chain[i]);
 				if(!this.hasSeecretContent(content)){
 					continue;
 				}
 				var seecretContent = this.extractSeecretText(content);
-				if(!startFound && this.isEnvelopeStart(seecretContent)){
+				if(!startFound &amp;&amp; this.isEnvelopeStart(seecretContent)){
 					if(this.isEnvelopeEnd(seecretContent)){
 						ordinals.push(i);
 						continue;
@@ -624,7 +652,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 					startFound=true;
 					startIndex = i;
 				}
-				else if(startFound && this.isEnvelopeEnd(seecretContent)){
+				else if(startFound &amp;&amp; this.isEnvelopeEnd(seecretContent)){
 					startFound=false;
 					ordinals.push(startIndex);
 				}
@@ -648,7 +676,7 @@ var mySeecret = seecretInstance.dechainify(arrayOfStrings)
 //dechainifying from an array of objects where .seecret is the property on each object that holds the stegotext
 var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 		chainSegmentMatcher:function(segment){
-			return segment && typeof segment == "object" && segment.seecret;
+			return segment &amp;&amp; typeof segment == "object" &amp;&amp; segment.seecret;
 		},
 		chainSegmentContentFinder:function(segment){
 			//assumes we have already validated the segment with chainSegmentMatcher
@@ -659,7 +687,7 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 //dechainify the third Seecret to be found in the array
 var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 		chainSegmentMatcher:function(segment){
-			return segment && typeof segment == "object" && segment.seecret;
+			return segment &amp;&amp; typeof segment == "object" &amp;&amp; segment.seecret;
 		},
 		chainSegmentContentFinder:function(segment){
 			//assumes we have already validated the segment with chainSegmentMatcher
@@ -671,7 +699,7 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 //dechainify a Seecret that is known to begin at the 10th item in the array 
 var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 		chainSegmentMatcher:function(segment){
-			return segment && typeof segment == "object" && segment.seecret;
+			return segment &amp;&amp; typeof segment == "object" &amp;&amp; segment.seecret;
 		},
 		chainSegmentContentFinder:function(segment){
 			//assumes we have already validated the segment with chainSegmentMatcher
@@ -683,7 +711,7 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 //dechainify a Seecret and return the covertexts too
 var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 		chainSegmentMatcher:function(segment){
-			return segment && typeof segment == "object" && segment.seecret;
+			return segment &amp;&amp; typeof segment == "object" &amp;&amp; segment.seecret;
 		},
 		chainSegmentContentFinder:function(segment){
 			//assumes we have already validated the segment with chainSegmentMatcher
@@ -694,24 +722,24 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 	@returns {string|object}
 	*/
 	this.dechainify=function(chain,params){
-		var ordinal = params && params.ordinal?params.ordinal:0;
-		var chainSegmentMatcher = params && params.chainSegmentMatcher?params.chainSegmentMatcher:this.chainSegmentMatcher;
-		var chainSegmentContentFinder = params && params.chainSegmentContentFinder?params.chainSegmentContentFinder:this.chainSegmentContentFinder;
+		var ordinal = params &amp;&amp; params.ordinal?params.ordinal:0;
+		var chainSegmentMatcher = params &amp;&amp; params.chainSegmentMatcher?params.chainSegmentMatcher:this.chainSegmentMatcher;
+		var chainSegmentContentFinder = params &amp;&amp; params.chainSegmentContentFinder?params.chainSegmentContentFinder:this.chainSegmentContentFinder;
 		var index =0;
 		var startFound = false;
 		var endFound = false;
 		var dechainedSeecret = "";
 		var covertexts = [];
-		var start = params && params.startIndex?params.startIndex:0;
-		var withCovertexts = params && params.withCovertexts?true:false;
-		for(var i=start;i<chain.length;i++){
+		var start = params &amp;&amp; params.startIndex?params.startIndex:0;
+		var withCovertexts = params &amp;&amp; params.withCovertexts?true:false;
+		for(var i=start;i&lt;chain.length;i++){
 			if(chainSegmentMatcher(chain[i])){
 				var content = chainSegmentContentFinder(chain[i]);
 				if(!this.hasSeecretContent(content)){
 					continue;
 				}
 				var seecretContent = this.extractSeecretText(content);
-				if(!startFound && this.isEnvelopeStart(seecretContent) && ordinal==index++){
+				if(!startFound &amp;&amp; this.isEnvelopeStart(seecretContent) &amp;&amp; ordinal==index++){
 					index = i;
 					startFound=true;
 					dechainedSeecret = seecretContent;
@@ -730,7 +758,7 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 					if(withCovertexts){
 						covertexts.push(this.extractCovertext(content));
 					}
-					if(!endFound && this.isEnvelopeEnd(seecretContent)){
+					if(!endFound &amp;&amp; this.isEnvelopeEnd(seecretContent)){
 						endFound=true;
 						break;
 					} 
@@ -798,3 +826,26 @@ var mySeecret = seecretInstance.dechainify(arrayofObjects,{
 	var CHAIN_SEGMENT_SIZING_ERROR = new SEECRET_ERROR("CHAIN_SEGMENT_SIZING_ERROR","The first chain segment of the chain must be able to contain the full text of the config.ENVELOPE_START value");
 }
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="SEECRET_ENGINE.html">SEECRET_ENGINE</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jun 13 2016 15:40:12 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
