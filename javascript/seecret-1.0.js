@@ -218,7 +218,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	*/
 	this.hideBinaryString = function(binString){
 		var output = "";
-		for(j = 0; j < binString.length; j++) {
+		for(var j = 0; j < binString.length; j++) {
 			output += binString[j] == 0?this.config.ZERO:this.config.ONE;
 		}
 		return output;
@@ -278,7 +278,7 @@ var hiddenText = seecretInstance.hide(compressed,seecretInstance.config.CONTENT_
 	*/
 	this.hideNumbersArray = function(numbersArray){
 		var vals = Array();
-		for (i=0;i<numbersArray.length;i++) {
+		for (var i=0;i<numbersArray.length;i++) {
 			vals.push(this.hideNumber(numbersArray[i]));
 		}
 		return vals.join(this.config.DELIMITER);
